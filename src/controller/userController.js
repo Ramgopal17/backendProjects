@@ -10,6 +10,7 @@ exports.createUser = async function (req, res) {
   try {
     let data = req.body
     let { fname, lname, email, phone, password, address } = data
+    console.log(fname)
     let j = JSON.parse(address)
     data.address = j
 
@@ -24,7 +25,7 @@ exports.createUser = async function (req, res) {
     return res.status(201).send({ status: true, message: "user created succesfully", data: createdUser })
   }
   catch (error) {
-    res.send({ msg: error.message })
+    res.status(500).send({ msg: error.message })
   }
 }
 
@@ -75,9 +76,9 @@ let userId = req.params.userId
 let data = req.body
 
 let { fname, lname, email, phone, password, address,profileImage} = data
-let imageUrl = req.xyz
+// let imageUrl = req.xyz
 
-let update = await userModel.updateOne({_id:userId},{$set:{fname:fname , lname:lname,email:email, phone:phone, password:password, address:address , profileImage:imageUrl}},{new:true})
+let update = await userModel.updateOne({_id:userId},{$set:{fname:fname , lname:lname,email:email, phone:phone, password:password, address:address , profileImage:profileImage}},{new:true})
 
 res.status(200).send({status: true, "message": "User profile updated",data:update})
 
