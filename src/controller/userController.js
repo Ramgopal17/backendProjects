@@ -12,5 +12,5 @@ exports.createUser= async function (req,res){
 
 
    createdUser= await userModel.create(data)
-   return res.
+   return res.status(201).send({status:true,message:"user created succesfully",data:createdUser})
 }
