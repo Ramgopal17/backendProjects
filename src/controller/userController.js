@@ -59,13 +59,17 @@ res.status(200).send({status:true, msg:"User login successfull" , data:{userId:u
 
 
 exports.getUser = async (req,res) => {
-
+try{
 let userId = req.params.userId
 
 let findUser = await userModel.findById(userId)
 
 
 res.status(200).send({status:true, message: "User profile details",data:findUser  })
+}
+catch (error) {
+  res.send({ msg: error.message })
+}
 
 }
 
