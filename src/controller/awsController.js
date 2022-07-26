@@ -72,11 +72,10 @@ let updateAwsFile = async function (req, res, next) {
 
     try {
         let profileImage = req.files
-        
         if (profileImage && profileImage.length > 0) {
 
             let imageUrl = await uploadFile(profileImage[0])
-            console.log(imageUrl)
+            // console.log(imageUrl)
             req.xyz = imageUrl
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }

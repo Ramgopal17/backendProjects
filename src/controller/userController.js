@@ -13,7 +13,7 @@ exports.createUser = async function (req, res) {
   try {
     let data = req.body
     if (Object.keys(data) == 0) {
-      return res.status(400).send({ status: false, message: "please  enter in b0dy something" })
+      return res.status(400).send({ status: false, message: "please  enter user details" })
     }
 
     let { fname, lname, email, phone, password, address } = data
@@ -36,7 +36,7 @@ exports.createUser = async function (req, res) {
       return res.status(400).send({ status: false, message: "please enter fname " })
     }
     if (!validName(fname)) {
-      return res.status(400).send({ status: false, message: "please enter  fname corect format" })
+      return res.status(400).send({ status: false, message: "please enter  fname correct format" })
     }
     if (!isValid(lname)) {
       return res.status(400).send({ status: false, message: "please enter lname " })
@@ -61,7 +61,7 @@ exports.createUser = async function (req, res) {
     if (!isValid(phone)) {
       return res.status(400).send({ status: false, message: "please enter phone" })
     }
-    if (!phone.match(/^[789][0-9]{9}$/)) {
+    if (!phone.match(/^[6789][0-9]{9}$/)) {
       return res.status(400).send({ status: false, message: "please enter indian phone number" })
     }
     let uniquePhone = await userModel.findOne({ phone: phone })
@@ -200,14 +200,17 @@ exports.updateUser = async (req, res) => {
   try{
   let userId = req.params.userId
   let data = req.body
+  data.profileImage=profileImage
+//   console.log(image)
+
   if(Object.keys(data).length==0){
     return res.status(400).send({ status: false, message: "please  provide someting to update" })
   }
   let { fname, lname, email, phone, password,profileImage, address } = data
   console.log(data)
 
-  // let imageUrl = req.xyz
-
+  let imageUrl = req.xyz
+// console.log(imageUrl)
 if(fname==""){
   return res.status(400).send({ status: false, message: "please   enter fname" })
 }
