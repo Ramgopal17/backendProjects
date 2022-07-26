@@ -17,10 +17,7 @@ exports.createUser = async function (req, res) {
     }
 
     let { fname, lname, email, phone, password, address } = data
-    console.log(fname)
-    let j = JSON.parse(address)
-
-    data.address = j
+    
 
 
     let imageUrl = req.xyz
@@ -77,12 +74,15 @@ exports.createUser = async function (req, res) {
       return res.status(400).send({ status: false, message: "please enter pasword in  correct format" })
 
     }
-
-
-
-    if (!isValid(j)) {
+    if(!address){
       return res.status(400).send({ status: false, message: "please enter address" })
     }
+  
+
+
+    let j = JSON.parse(address)
+
+    data.address = j
 
     if (!isValid(j.shipping)) {
       return res.status(400).send({ status: false, message: "please enter  shipping address" })
@@ -108,7 +108,7 @@ exports.createUser = async function (req, res) {
 
 
     if (!isValid(j.billing)) {
-      return res.status(400).send({ status: false, message: "please enter  shipping address" })
+      return res.status(400).send({ status: false, message: "please enter  billing address" })
     }
     if (!isValid(j.billing.street)) {
       return res.status(400).send({ status: false, message: "please enter  street in  billing address" })
@@ -122,20 +122,20 @@ exports.createUser = async function (req, res) {
     if (!/^[0-9]{6}$/.test(j.billing.pincode)) {
       return res.status(400).send({ status: false, message: "Pin code needed in valid format in billing address." })
     }
-
-
-
     let createdUser = await userModel.create(data)
     return res.status(201).send({ status: true, message: "user created succesfully", data: createdUser })
+    
+      }
+    
+      catch (error) {
+        res.send({ msg: error.message })
+      }
+    
+    }
 
 
-  }
 
-  catch (error) {
-    res.status(500).send({ msg: error.message })
-  }
 
-}
 
 exports.loginuser = async function (req, res) {
 
@@ -197,48 +197,79 @@ exports.getUser = async (req, res) => {
 
 
 exports.updateUser = async (req, res) => {
+  try{
   let userId = req.params.userId
   let data = req.body
-  final = {}
-  let { fname, lname, email, phone, password, address, profileImage } = data
-  let imageUrl = req.xyz
-  // if (fname) {
-    if (!isValid(fname)) {
-      return res.status(400).send({ status: false, message: "fname  to update is not in valid format or not mentioned. " })
-    }
-    if (!validName(fname)) {
-      return res.status(400).send({ status: false, message: "please enter  fname corect format" })
-    }
-    // final.fname = fname
-  // }
-  if (lname) {
-    if (!Object.values(lname) == 0) {
-      return res.status(400).send({ status: false, message: "lname  to update is not in valid format or not mentioned. " })
-    }
-    if (!validName(lname)) {
-      return res.status(400).send({ status: false, message: "please enter  lname corect format" })
-    }
-    final.lname = lname
+  if(Object.keys(data).length==0){
+    return res.status(400).send({ status: false, message: "please  provide someting to update" })
   }
+  let { fname, lname, email, phone, password,profileImage, address } = data
+  console.log(data)
 
-  if (email) {
-    if (!isValid(email)) {
-      return res.status(400).send({ status: false, message: "please enter email id" })
-    }
-    if (!validateEmail(email)) {
-      return res.status(400).send({ status: false, message: "please enter email in  correct format" })
+  // let imageUrl = req.xyz
 
-    }
-    const uniqueEmail = await bookModel.findOne({ email: email })
-    if (uniqueEmail) {
-      return res.status(400).send({ status: false, message: "email to update is already there." })
-    }
-    final.email = email
-
-  }
-
-  let update = await userModel.updateOne({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: password, address: address, profileImage: imageUrl } }, { new: true })
-  // let update = await userModel.updateOne({ _id: userId }, final, { new: true })
-  res.status(200).send({ status: true, "message": "User profile updated", data: update })
+if(fname==""){
+  return res.status(400).send({ status: false, message: "please   enter fname" })
+}
+if (!validName(fname)) {
+  return res.status(400).send({ status: false, message: "please enter  fname corect format" })
+}
+  
+if(lname==""){
+  return res.status(400).send({ status: false, message: "please   enter lname" })
+}
+if (!validName(lname)) {
+  return res.status(400).send({ status: false, message: "please enter  lname corect format" })
+}
+ 
+if(email==""){
+  return res.status(400).send({ status: false, message: "please   enter email" })
+}
+if(email){ 
+if (!validateEmail(email)) {
+  return res.status(400).send({ status: false, message: "please enter email in  correct format" })
 
 }
+const uniqueEmail = await userModel.findOne({ email: email })
+if (uniqueEmail) {
+  return res.status(400).send({ status: false, message: "email to update is already there." })
+}
+}
+if(phone==""){
+  return res.status(400).send({ status: false, message: "please   enter phone" })
+}
+if(phone){
+if (!phone.match(/^[789][0-9]{9}$/)) {
+  return res.status(400).send({ status: false, message: "please enter indian phone number" })
+}
+let uniquePhone = await userModel.findOne({ phone: phone })
+if (uniquePhone) {
+  return res.status(400).send({ status: false, message: "phone already exist " })
+
+}
+}
+if(profileImage==""){
+  return res.status(400).send({ status: false, message: "please enter profileImage" })
+}
+if(address==""){
+  return res.status(400).send({ status: false, message: "please enter address" })
+}
+
+  let update = await userModel.updateOne({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: password, address: address, profileImage: imageUrl } }, { new: true })
+
+  let findUser=await userModel.findOne({_id: userId })
+  res.status(200).send({ status: true, "message": "User profile updated", data: findUser})
+}
+  catch (error) {
+    res.send({ msg: error.message })
+  }
+
+}
+
+
+
+  
+  
+  
+  
+  
