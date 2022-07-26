@@ -49,14 +49,14 @@ let awsFile = async function (req, res, next) {
         if (profileImage && profileImage.length > 0) {
 
             let imageUrl = await uploadFile(profileImage[0])
-            console.log(imageUrl)
+      
             req.xyz = imageUrl
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
-        else {
-         return  res.status(400).send({ msg: "No file found" })
+        // else {
+        //  return  res.status(400).send({ msg: "No file found" })
 
-        }
+        // }
 
 
         next()

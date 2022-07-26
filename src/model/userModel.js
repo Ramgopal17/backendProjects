@@ -10,7 +10,7 @@ const userSchema =  new mongoose.Schema({
         password: {type:String,required:true, minLen:8, maxLen:15}, // encrypted password
         address: {
           shipping: {
-            street: {type:String, required:true},
+            street: {type:String,required:true},
             city: {type:String, required:true},
             pincode: {type:Number, required:true}
           },
