@@ -41,11 +41,11 @@ let uploadFile = async (file) => {
         })
     })
 }
-let awsFile = async function (req, res, next) {
+let awsFile = async function (req, res) {
 
     try {
         let profileImage = req.files
-        
+    
         if (profileImage && profileImage.length > 0) {
 
             let imageUrl = await uploadFile(profileImage[0])
@@ -53,13 +53,13 @@ let awsFile = async function (req, res, next) {
             req.xyz = imageUrl
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
-        // else {
-        //  return  res.status(400).send({ msg: "No file found" })
+        else {
+         return  res.status(400).send({ msg: "No file found" })
 
-        // }
+        }
  
 
-        next()
+       
     }
 
     catch (err) {
@@ -68,7 +68,7 @@ let awsFile = async function (req, res, next) {
 
 }
 
-let updateAwsFile = async function (req, res, next) {
+let updateAwsFile = async function (req, res) {
 
     try {
         let profileImage = req.files
@@ -80,7 +80,6 @@ let updateAwsFile = async function (req, res, next) {
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
       
-        next()
     }
 
     catch (err) {
@@ -88,6 +87,8 @@ let updateAwsFile = async function (req, res, next) {
     }
 
 }
+
+
 
 
 module.exports.awsFile = awsFile

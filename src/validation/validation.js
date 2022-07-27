@@ -25,4 +25,7 @@ const validName = (name) => {
            
 }
 
+
+
+
 module.exports = { isValid, validateEmail,passwordValidate ,validName}
