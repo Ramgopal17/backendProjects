@@ -1,5 +1,8 @@
 const productModel = require("../model/productModel")
-
+const mongoose = require('mongoose')
+const isValidObjectId = function (objectId) {
+    return mongoose.Types.ObjectId.isValid(objectId)
+}
 exports.createProduct = async function (req, res) {
     let productData = req.body
     let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = productData
@@ -19,8 +22,15 @@ exports.getProducts=async function(req,res){
 
 }
 exports.getByProductId=async function(req,res){
-    let data=req.params.productId
-    let getProduct=await productModel.findById(data)
+    let productId=req.params.productId
+   if(!isValidObjectId(productId)){
+    return res.status(400).send({status:false,msg:"please provide productId in valid format "})
+   }
+    let getProduct=await productModel.findOne({_id:productId,isDeleted:false})
+    console.log(getProduct)
+    if(!getProduct){
+        return res.status(400).send({status:true,msg:"product not found or already deleted"})
+    }
     return res.status(200).send({status:true,msg:"product list",data:getProduct})
 
 }

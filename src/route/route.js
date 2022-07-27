@@ -15,7 +15,7 @@ router.put("/user/:userId/profile",awsController.updateAwsFile,   userController
 router.post("/products",awsController.awsFile,productController.createProduct)
 router.get("/products" , productController.getProducts)
 router.get("/products/:productId" , productController.getByProductId)
-router.put("/products/:productId" , productController.updateProduct)
+router.put("/products/:productId" ,awsController.updateAwsFile, productController.updateProduct)
 // router.delete("/products/:productId" , productController.deleteProduct)
 
 
