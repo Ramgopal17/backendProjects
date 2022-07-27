@@ -41,7 +41,7 @@ let uploadFile = async (file) => {
         })
     })
 }
-let awsFile = async function (req, res, next) {
+let awsFile = async function (req, res) {
 
     try {
         let profileImage = req.files
@@ -57,9 +57,9 @@ let awsFile = async function (req, res, next) {
          return  res.status(400).send({ msg: "No file found" })
 
         }
+ 
 
-
-        next()
+       
     }
 
     catch (err) {
@@ -68,7 +68,7 @@ let awsFile = async function (req, res, next) {
 
 }
 
-let updateAwsFile = async function (req, res, next) {
+let updateAwsFile = async function (req, res) {
 
     try {
         let profileImage = req.files
@@ -81,7 +81,6 @@ let updateAwsFile = async function (req, res, next) {
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
       
-        next()
     }
 
     catch (err) {
