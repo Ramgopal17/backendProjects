@@ -14,8 +14,8 @@ const validateEmail = (email) => {
         );
 }
 const passwordValidate = function (value) {
-    let regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
-    // let validPass = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$")
+    let regex = /^[a-zA-Z0-9_@]{8,15}$/
+   
 
     return regex.test(value)
 }
