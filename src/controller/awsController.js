@@ -19,6 +19,9 @@ aws.config.update({
     region: "ap-south-1"
 })
 
+
+
+
 let uploadFile = async (file) => {
     return new Promise(function (resolve, reject) {
         // this function will upload file to aws and return the link
@@ -41,7 +44,7 @@ let uploadFile = async (file) => {
         })
     })
 }
-let awsFile = async function (req, res) {
+let awsFile = async function (req, res,next) {
 
     try {
         let profileImage = req.files
@@ -54,10 +57,10 @@ let awsFile = async function (req, res) {
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
         else {
-         return  res.status(400).send({ msg: "No file found" })
+         return  res.status(400).send({ msg: "please enter profileImage" })
 
         }
- 
+ next();
 
        
     }
@@ -68,7 +71,7 @@ let awsFile = async function (req, res) {
 
 }
 
-let updateAwsFile = async function (req, res) {
+let updateAwsFile = async function (req, res, next) {
 
     try {
         let profileImage = req.files
@@ -79,7 +82,7 @@ let updateAwsFile = async function (req, res) {
             req.xyz = imageUrl
             //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
         }
-      
+      next();
     }
 
     catch (err) {

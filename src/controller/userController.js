@@ -17,7 +17,7 @@ exports.createUser = async function (req, res) {
   
       let { fname, lname, email, phone, password, address } = data
   
-  
+    
   
       let imageUrl = req.xyz
   
@@ -27,10 +27,11 @@ exports.createUser = async function (req, res) {
       if (!isValid(password)) {
         return res.status(400).send({ status: false, message: "please enter password" })
       }
+   
   
       const hashedPassword = await bcrypt.hash(password, salt)
       data.password = hashedPassword
-  
+     
       if (!isValid(fname)) {
         return res.status(400).send({ status: false, message: "please enter fname " })
       }
@@ -42,15 +43,20 @@ exports.createUser = async function (req, res) {
       }
       if (!validName(lname)) {
         return res.status(400).send({ status: false, message: "please enter lname correct format" })
-  
       }
+      console.log(email)
       if (!isValid(email)) {
         return res.status(400).send({ status: false, message: "please enter email" })
       }
       if (!validateEmail(email)) {
         return res.status(400).send({ status: false, message: "please enter email in  correct format" })
-  
       }
+      // if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/).test(email)) {
+      //   return res.status(400).send({ status: false, msg: "write a valid email id" })
+      // }
+
+      console.log(email)
+      
       let uniqueEmail = await userModel.findOne({ email: email })
       if (uniqueEmail) {
         return res.status(400).send({ status: false, message: "email already exits" })
@@ -138,7 +144,7 @@ exports.loginuser = async function (req, res) {
 
   let data = req.body
   if (Object.keys(data).length == 0) {
-    return res.status(400).send({ status: false, message: "please  enter in b0dy something" })
+    return res.status(400).send({ status: false, message: "please  provide email and password" })
   }
   let { email, password } = data
 
@@ -212,6 +218,11 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     let userId = req.params.userId
+    if (!isValidObjectId(userId)) {
+      return res.status(400).send({ status: false, msg: "userid  is not valid" })
+    }
+
+    
     let data = req.body
     if (Object.keys(data).length == 0) {
       return res.status(400).send({ status: false, message: "please  provide someting to update" })
@@ -221,8 +232,12 @@ exports.updateUser = async (req, res) => {
    //------------------------------------------update address---------------------------------------------------------
 
    let findUser = await userModel.findById(userId)
+   if (!findUser) {
+    return res.status(400).send({ status: false, message: "please enter correct user id" })
+  }
    let add = findUser.address
    
+ 
     if (address == "") {
       return res.status(400).send({ status: false, message: "please enter address" })
     }

@@ -1,14 +1,79 @@
 const productModel = require("../model/productModel")
+const { isValid , validName} = require("../validation/validation")
 
 exports.createProduct = async function (req, res) {
     let productData = req.body
     let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = productData
-   let imageUrl=req.xyz
-   productData.productImage=imageUrl
+   let imageUrl = req.xyz
+   productData.productImage = imageUrl
+
+if(!isValid(title)){
+    return res.status(400).send({status: false, message: "please  provide title" })
+}
+if(!validName(title)){
+    return res.status(400).send({status: false, message: "please  enter title in correct format" })
+}
+
+if(!isValid(description)){
+    return res.status(400).send({status: false, message: "please  provide description" })
+}
+if(!validName(description)){
+    return res.status(400).send({status: false, message: "please  enter description in correct format" })
+}
+
+if(!isValid(price)){
+    return res.status(400).send({status: false, message: "please  provide price" })
+}
+if( !(/^[0-9]{1,100}$/.test(price))){
+    return res.status(400).send({status: false, message: "please  enter price in Number" })
+}
+
+if(!isValid(currencyId)){
+    return res.status(400).send({status: false, message: "please  provide currencyId" })
+}
+if(!validName(currencyId)){
+    return res.status(400).send({status: false, message: "please  enter currencyId in correct format" })
+}
+
+if(!validName(style)){
+    return res.status(400).send({status: false, message: "please  enter style in correct format" })
+}
+
+if(!isValid(currencyFormat)){
+    return res.status(400).send({status: false, message: "please  provide currencyFormat" })
+}
+if(!isValid(availableSizes)){
+    return res.status(400).send({status: false, message: "please  provide availableSizes" })
+}
+
+
+if(! typeof(isFreeShipping) == Boolean ){
+    return res.status(400).send({status: false, message: "please  provide isFreeShipping in True or False" })
+}
+console.log(typeof(availableSizes))
+if(  !(availableSizes =="S"|| availableSizes == "XS"|| availableSizes == "M"|| availableSizes == "X" || availableSizes == "L" || availableSizes == "XXL" || availableSizes =="XL" )){
+    return res.status(400).send({status: false, message: "please enter availableSizes in S, XS , M , X , L , XXL , XL" })
+}
+
+if( !(/^[0-9]{1,2}$/.test(installments))){
+    return res.status(400).send({status: false, message: "please  enter installments in Number" })
+}
+
+let checktitle = await productModel.findOne({ title:title})
+if(checktitle){
+    return res.status(400).send({status: false, message: "title already exist" })
+}
+
     let created=await productModel.create(productData)
    return res.status(201).send({status:true,msg:"succes",data:created})
    
 }
+
+
+
+
+
+
 exports.getProducts=async function(req,res){
     let data=req.query
     // $or:[{title:title},{price:price},{availableSizes:availableSizes}]
