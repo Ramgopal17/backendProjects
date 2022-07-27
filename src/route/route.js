@@ -2,6 +2,7 @@ const express=require("express")
 const router=express.Router()
 const userController=require("../controller/userController")
 const awsController = require('../controller/awsController')
+const productController = require('../controller/productController')
 
 
 router.post("/register",awsController.awsFile, userController.createUser)

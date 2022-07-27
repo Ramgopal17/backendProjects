@@ -37,7 +37,7 @@ exports.createUser = async function (req, res) {
       return res.status(400).send({ status: false, message: "please enter fname " })
     }
     if (!validName(fname)) {
-      return res.status(400).send({ status: false, message: "please enter  fname corect format" })
+      return res.status(400).send({ status: false, message: "please enter  fname correct format" })
     }
     if (!isValid(lname)) {
       return res.status(400).send({ status: false, message: "please enter lname " })
