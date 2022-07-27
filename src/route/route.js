@@ -9,7 +9,7 @@ router.post("/register",awsController.awsFile, userController.createUser)
 router.post("/login" , userController.loginuser)
 router.get("/user/:userId/profile" , userController.getUser)
 
-router.put("/user/:userId/profile",awsController.updateAwsFile,   userController.updateUser)
+router.put("/user/:userId/profile",  userController.updateUser)
 
 
 
