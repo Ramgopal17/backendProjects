@@ -195,6 +195,9 @@ exports.loginuser = async function (req, res) {
 exports.getUser = async (req, res) => {
   try {
     let userId = req.params.userId
+
+    // let loginData = req.headers.authorization
+    console.log(loginData)
     if (!isValidObjectId(userId)) {
       return res.status(400).send({ status: false, msg: "userid  is not valid" })
 

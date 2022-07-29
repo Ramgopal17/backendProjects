@@ -26,7 +26,10 @@ const validName = (name) => {
            
 }
 
+let isValidSize = (sizes) => {
+    return ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'].includes(sizes);
+  }
 
 
 
-module.exports = { isValid, validateEmail,passwordValidate ,validName}
+module.exports = { isValid, validateEmail,passwordValidate ,validName , isValidSize}
