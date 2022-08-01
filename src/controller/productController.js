@@ -138,10 +138,9 @@ exports.getProducts = async (req, res) => {
         }
 
 
-        let allData = await productModel.find(temp).sort({ price: priceSort })
+        let finalData = await productModel.find(temp).sort({ price: priceSort })
 
-        let finalData = []
-        finalData = [...allData]
+      
 
         if (availableSizes) {
             size = size.split(",")
