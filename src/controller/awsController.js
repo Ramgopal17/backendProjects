@@ -19,7 +19,8 @@ aws.config.update({
     region: "ap-south-1"
 })
 
-let uploadFile = async (file) => {
+
+ exports.uploadFile = async (file) => {
     return new Promise(function (resolve, reject) {
         // this function will upload file to aws and return the link
         let s3 = new aws.S3({ apiVersion: '2006-03-01' }); // we will be using the s3 service of aws
@@ -41,6 +42,7 @@ let uploadFile = async (file) => {
         })
     })
 }
+<<<<<<< HEAD
 let awsFile = async function (req, res, next) {
 
     try {
@@ -95,3 +97,6 @@ let updateAwsFile = async function (req, res) {
 module.exports.awsFile = awsFile
 
 module.exports.updateAwsFile = updateAwsFile
+=======
+
+>>>>>>> d495c6f856846ddfeb6288ab466844212be5a364

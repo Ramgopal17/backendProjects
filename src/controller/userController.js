@@ -1,5 +1,6 @@
 const userModel = require("../model/userModel")
 const bcrypt = require('bcrypt');
+const {uploadFile} = require("../controller/awsController")
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
@@ -11,26 +12,25 @@ const isValidObjectId = function (objectId) {
 exports.createUser = async function (req, res) {
     try {
       let data = req.body
+      let profileImage = req.files
+      
       if (Object.keys(data).length == 0) {
         return res.status(400).send({ status: false, message: "please  provide user details" })
       }
   
       let { fname, lname, email, phone, password, address } = data
   
-  
-  
-      let imageUrl = req.xyz
-  
-      data.profileImage = imageUrl
+     
   
       const salt = await bcrypt.genSalt(10)
       if (!isValid(password)) {
         return res.status(400).send({ status: false, message: "please enter password" })
       }
+   
   
       const hashedPassword = await bcrypt.hash(password, salt)
       data.password = hashedPassword
-  
+     
       if (!isValid(fname)) {
         return res.status(400).send({ status: false, message: "please enter fname " })
       }
@@ -42,25 +42,31 @@ exports.createUser = async function (req, res) {
       }
       if (!validName(lname)) {
         return res.status(400).send({ status: false, message: "please enter lname correct format" })
-  
       }
+      console.log(email)
       if (!isValid(email)) {
         return res.status(400).send({ status: false, message: "please enter email" })
       }
       if (!validateEmail(email)) {
         return res.status(400).send({ status: false, message: "please enter email in  correct format" })
-  
       }
+    
+
+      console.log(email)
+      
       let uniqueEmail = await userModel.findOne({ email: email })
       if (uniqueEmail) {
         return res.status(400).send({ status: false, message: "email already exits" })
   
       }
+      if(profileImage.length == 0){
+        return res.status(400).send({status:false, msg:"please provide profileImage"})
+      }
   
       if (!isValid(phone)) {
         return res.status(400).send({ status: false, message: "please enter phone" })
       }
-      if (!phone.match(/^[6789][0-9]{9}$/)) {
+      if (!phone.match(/^[ 6789][0-9 ]{9}$/)) {
         return res.status(400).send({ status: false, message: "please enter indian phone number" })
       }
       let uniquePhone = await userModel.findOne({ phone: phone })
@@ -124,6 +130,14 @@ exports.createUser = async function (req, res) {
       if (!/^[1-9][0-9]{5}$/.test(j.billing.pincode)) {
         return res.status(400).send({ status: false, message: "Pin code needed in valid format in billing address." })
       }
+   
+    
+     profileImage = await uploadFile(profileImage[0])
+  
+
+  
+      data.profileImage = profileImage
+
       let createdUser = await userModel.create(data)
       return res.status(201).send({ status: true, message: "user created succesfully", data: createdUser })
   
@@ -138,7 +152,7 @@ exports.loginuser = async function (req, res) {
 
   let data = req.body
   if (Object.keys(data).length == 0) {
-    return res.status(400).send({ status: false, message: "please  enter in b0dy something" })
+    return res.status(400).send({ status: false, message: "please  provide email and password" })
   }
   let { email, password } = data
 
@@ -189,6 +203,9 @@ exports.loginuser = async function (req, res) {
 exports.getUser = async (req, res) => {
   try {
     let userId = req.params.userId
+
+    // let loginData = req.headers.authorization
+    console.log(loginData)
     if (!isValidObjectId(userId)) {
       return res.status(400).send({ status: false, msg: "userid  is not valid" })
 
@@ -212,17 +229,32 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     let userId = req.params.userId
+    if (!isValidObjectId(userId)) {
+      return res.status(400).send({ status: false, msg: "userid  is not valid" })
+    }
+
+    
     let data = req.body
+    let profileImage = req.files
+    if( profileImage && profileImage.length > 0){
+      data.profileImage = profileImage
+    }
+   
+  
     if (Object.keys(data).length == 0) {
       return res.status(400).send({ status: false, message: "please  provide someting to update" })
     }
-    let { fname, lname, email, phone, password, profileImage, address } = data
+    let { fname, lname, email, phone, password,  address } = data
    
    //------------------------------------------update address---------------------------------------------------------
 
    let findUser = await userModel.findById(userId)
+   if (!findUser) {
+    return res.status(400).send({ status: false, message: "please enter correct user id" })
+  }
    let add = findUser.address
    
+ 
     if (address == "") {
       return res.status(400).send({ status: false, message: "please enter address" })
     }
@@ -272,7 +304,7 @@ exports.updateUser = async (req, res) => {
       }
     }
 
-    let imageUrl = req.xyz
+   
 
     if (fname == "") {
       return res.status(400).send({ status: false, message: "please   enter fname" })
@@ -314,18 +346,24 @@ exports.updateUser = async (req, res) => {
 
       }
     }
-    if (profileImage == "") {
-      return res.status(400).send({ status: false, message: "please enter profileImage" })
+    
+  
+    if( profileImage && profileImage.length > 0){
+
+      var imageUrl = await uploadFile(profileImage[0])
     }
+   
    
 
     let update = await userModel.updateOne({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: password, address: add, profileImage: imageUrl } }, { new: true })
 
     let findUser1 = await userModel.findOne({ _id: userId })
-    res.status(200).send({ status: true, "message": "User profile updated", data: findUser1 })
+
+  return  res.status(200).send({ status: true, "message": "User profile updated", data: findUser1 })
+    
   }
   catch (error) {
-    res.send({ msg: error.message })
+  return  res.send({ msg: error.message })
   }
 
 }

@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Ramgopal17/project-5-group32#readme",
   "dependencies": {
-    "aws-sdk": "^2.1181.0",
+    "aws-sdk": "^2.1182.0",
     "bcrypt": "^5.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",
