@@ -20,7 +20,7 @@ aws.config.update({
 })
 
 
-let uploadFile = async (file) => {
+ exports.uploadFile = async (file) => {
     return new Promise(function (resolve, reject) {
         // this function will upload file to aws and return the link
         let s3 = new aws.S3({ apiVersion: '2006-03-01' }); // we will be using the s3 service of aws
@@ -42,56 +42,4 @@ let uploadFile = async (file) => {
         })
     })
 }
-let awsFile = async function (req, res,next) {
 
-    try {
-        let profileImage = req.files
-    
-        if (profileImage && profileImage.length > 0) {
-
-            let imageUrl = await uploadFile(profileImage[0])
-      
-            req.xyz = imageUrl
-            //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
-        }
-        else {
-         return  res.status(400).send({ msg: "please enter profileImage" })
-
-        }
- next();
-
-       
-    }
-
-    catch (err) {
-        return  res.status(500).send({ msg: err })
-    }
-
-}
-
-let updateAwsFile = async function (req, res, next) {
-
-    try {
-        let profileImage = req.files
-        if (profileImage && profileImage.length > 0) {
-
-            let imageUrl = await uploadFile(profileImage[0])
-            // console.log(imageUrl)
-            req.xyz = imageUrl
-            //  res.status(201).send({msg: "file uploaded succesfully", data: uploadedFileURL})
-        }
-      next();
-    }
-
-    catch (err) {
-        return  res.status(500).send({ msg: err })
-    }
-
-}
-
-
-
-
-module.exports.awsFile = awsFile
-
-module.exports.updateAwsFile = updateAwsFile
