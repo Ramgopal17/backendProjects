@@ -42,4 +42,3 @@ aws.config.update({
         })
     })
 }
-
