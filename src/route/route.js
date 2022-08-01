@@ -11,8 +11,13 @@ router.post("/login" , userController.loginuser)
 router.get("/user/:userId/profile" , userController.getUser)
 
 router.put("/user/:userId/profile",awsController.updateAwsFile,   userController.updateUser)
-//products
-router.post("/products",  awsController.awsFile, productController.createProduct);
+//-------------------------------product Api's---------------------------------------------//
+router.post("/products",awsController.awsFile,productController.createProduct)
+router.get("/products" , productController.getProducts)
+router.get("/products/:productId" , productController.getByProductId)
+router.put("/products/:productId" , productController.updateProduct)
+// router.delete("/products/:productId" , productController.deleteProduct)
+
 
 
 
