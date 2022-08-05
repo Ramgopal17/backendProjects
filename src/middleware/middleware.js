@@ -1,71 +1,72 @@
-const productModel = require("../model/productModel")
-const cartModel = require("../model/cartModel");
-const userModel = require("../model/userModel");
+const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
-const { isValid, validName, isValidSize, validField } = require("../validation/validation")
-
-const { uploadFile } = require("../controller/awsController")
-const isValidObjectId = function (objectId) {
-    return mongoose.Types.ObjectId.isValid(objectId)
-}
 
 
-exports.createCart = async function (req, res) {
-    try{
-    let userId = req.params.userId
-    if(!isValidObjectId(userId)){
-        return res.status(400).send({ status: false, message: "invalid userId" })
-    }
-    let body = req.body;
-    if(Object.keys(body).length==0){
-        return res.status(400).send({ status: false, message: "body should not be empty" })
-    }
-  let  items=body.items
+exports.authentication = async function (req, res, next) {
+    try {
 
-  let cart= await cartModel.findOne({userId:userId})
-    for(let i=0;i<items.length;i++){
-    productId=items[i].productId
-    
-    quantity=items[i].quantity
-    
 
-    let product= await productModel.findById(productId)
-    if(!product){
-        return res.status(400).send({ status: false, message: "No product found" })
-    }
+        let token = req.headers['authorization']
 
- 
- console.log(cart)
-if(cart){
-    for(let j=0;j<cart.items.length;j++){
-        for(k=0;k<body.items;k++){
-            if(cart.items[j].productId==body.items[k].productId){
-                           quantity++
-            }
+        let a = token.split("")
 
-            if(cart.items[j].productId!=body.items[k].productId){
-                cart.items.push(body.items[k])
-            }
+        token = a.splice(7, token.length)
+        token = token.join("")
+
+
+        if (!token) {
+            return res.status(400).send({ status: false, msg: "token is not present" })
         }
+
+
+        let decodedToken = jwt.verify(token, "ourFifthProject", function (err, decodedToken) {
+            if (err) {
+                return res.status(401).send({ status: false, msg: "you are not authenticate" })
+            }
+            let time = Date.now()
+            let exp = decodedToken.exp
+            if (time > exp) {
+                return res.status(400).send({ status: false, message: "Token is expired" })
+            }
+
+            else {
+
+                req.decodedToken = decodedToken
+
+                next()
+            }
+        })
+
+    }
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
     }
 }
 
-if(!cart){
-    body.userId=userId
-    body.totalPrice=product.price*quantity
-    body.totalItems=items.length
-}
-    }
-    if(!cart){
-    let saveData= await cartModel.create(body)
-    res.status(201).send({status:true,mes:"success",data:saveData})
+exports.authorization = async function (req, res, next) {
+    try {
+        let userId = req.params.userId
+        let decodedToken = req.decodedToken
+        let decodeUserId = decodedToken.userId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({ status: false, msg: "userid  is not valid" })
 
+        }
+
+
+        if (userId != decodeUserId) {
+            return res.status(403).send({ status: false, msg: "you are not authorise" })
+        }
+        next()
     }
-    if(cart){
-        res.status(201).send({status:true,mes:"success",data:cart})
+    catch (err) {
+        return res.status(500).send({ status: false, msg: err.message })
     }
-  
-} catch (error) {
-    return res.status(500).send({ status: false, message: error.message })
+
 }
-}
+
+
+
+
+
+

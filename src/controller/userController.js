@@ -190,9 +190,12 @@ exports.loginuser = async function (req, res) {
                 userId: userId.toString(),
                 batch: "radon",
                 organisation: "project-5",
+                iat: Date.now(),
+                exp: (Date.now()) + (60 * 1000) * 2
+
             },
             "ourFifthProject", {
-            expiresIn: '3600s'
+         
         })
 
         res.status(200).send({ status: true, msg: "User login successfull", data: { userId: userId, token: token } })
@@ -204,8 +207,8 @@ exports.getUser = async (req, res) => {
   try {
     let userId = req.params.userId
 
-    // let loginData = req.headers.authorization
-    console.log(loginData)
+  
+    
     if (!isValidObjectId(userId)) {
       return res.status(400).send({ status: false, msg: "userid  is not valid" })
 

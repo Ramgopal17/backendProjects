@@ -29,7 +29,7 @@ const validField = (name) => {
         .match(/^[a-zA-Z0-9 ]+$/)
 }
 
-let isValidSize = (sizes) => {
+let isValidSize = function(sizes)  {
     return ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'].includes(sizes);
 }
 
