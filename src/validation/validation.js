@@ -26,7 +26,11 @@ const validName = (name) => {
 const validField = (name) => {
     return String(name)
         .toLowerCase()
-        .match(/^[a-zA-Z0-9 ]+$/)
+        .match(/^[a-zA-Z0-9.,-_;: ]+$/)
+}
+const validPrice = (name) => {
+    return (name)
+        .match(/^([0-9]{0,15}((.)[0-9]{0,2}))$/)
 }
 
 let isValidSize = function(sizes)  {
@@ -35,4 +39,4 @@ let isValidSize = function(sizes)  {
 
 
 
-module.exports = { isValid, validateEmail, passwordValidate, validName, isValidSize,validField }
+module.exports = { isValid, validateEmail, passwordValidate, validName, isValidSize,validField,validPrice}

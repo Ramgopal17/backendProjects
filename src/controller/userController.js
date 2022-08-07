@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 
 const { isValid, validateEmail, passwordValidate, validName } = require("../validation/validation")
-// const saltRounds = 10;
+
 const isValidObjectId = function (objectId) {
     return mongoose.Types.ObjectId.isValid(objectId)
 }
@@ -43,7 +43,7 @@ exports.createUser = async function (req, res) {
       if (!validName(lname)) {
         return res.status(400).send({ status: false, message: "please enter lname correct format" })
       }
-      console.log(email)
+     
       if (!isValid(email)) {
         return res.status(400).send({ status: false, message: "please enter email" })
       }
@@ -52,7 +52,7 @@ exports.createUser = async function (req, res) {
       }
     
 
-      console.log(email)
+ 
       
       let uniqueEmail = await userModel.findOne({ email: email })
       if (uniqueEmail) {
@@ -191,7 +191,7 @@ exports.loginuser = async function (req, res) {
                 batch: "radon",
                 organisation: "project-5",
                 iat: Date.now(),
-                exp: (Date.now()) + (60 * 1000) * 2
+                exp: (Date.now()) + (60 * 1000) * 60
 
             },
             "ourFifthProject", {
@@ -264,7 +264,8 @@ exports.updateUser = async (req, res) => {
     if (address) {
       
       address = JSON.parse(address)
-      if (typeof(address) != Object) {
+     
+      if (typeof(address) != "object") {
         return res.status(400).send({ status: false, message: "please enter address in valid format to update" })
       }
       if (address.shipping == "") {
@@ -276,7 +277,7 @@ exports.updateUser = async (req, res) => {
 
       
       if (address.shipping) {
-        if (typeof(address.shipping) != Object) {
+        if (typeof(address.shipping) != "object") {
           return res.status(400).send({ status: false, message: "please enter shpping address in valid format to update" })
         }
         if (address.shipping.street) {
@@ -292,7 +293,7 @@ exports.updateUser = async (req, res) => {
 
       }
       if (address.billing) {
-        if (typeof(address.billing) != Object) {
+        if (typeof(address.billing) != "object") {
           return res.status(400).send({ status: false, message: "please enter billing address in valid format to update" })
         }
         if (address.billing.street) {
@@ -340,7 +341,7 @@ exports.updateUser = async (req, res) => {
       return res.status(400).send({ status: false, message: "please   enter phone" })
     }
     if (phone) {
-      if (!phone.match(/^[789][0-9]{9}$/)) {
+      if (!phone.match(/^[6789][0-9]{9}$/)) {
         return res.status(400).send({ status: false, message: "please enter indian phone number" })
       }
       let uniquePhone = await userModel.findOne({ phone: phone })

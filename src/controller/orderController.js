@@ -51,7 +51,7 @@ exports.createOrder = async function (req, res) {
     data.status = status
 
     let createdOrder = await orderModel.create(data)
-    console.log(cartId)
+    
     const DeleteCartDetails = await cartModel.findOneAndUpdate({ userId: userId, _id:cartId }, { $set: { items: [], totalPrice: 0, totalItems: 0 } }, { new: true })
    
     return res.status(201).send({ status: true, message: "Success", data: createdOrder })
@@ -104,11 +104,10 @@ exports.updateOrder = async function (req, res) {
 
     let data = {}
     data.status = status
-    // data.isDeleted = isDeleted
+   
 
     let a = await orderModel.findOneAndUpdate({ _id: orderId }, data, { new: true })
  return   res.status(200).send({ status: true, message: "Success", data: a })
 }
 
 
-// let token=req.headers.authorisation

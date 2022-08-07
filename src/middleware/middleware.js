@@ -7,22 +7,22 @@ exports.authentication = async function (req, res, next) {
 
 
         let token = req.headers['authorization']
-
+        
+        if (!token) {
+            return res.status(400).send({ status: false, msg: "token is not present" })
+        }
+        
         let a = token.split("")
 
         token = a.splice(7, token.length)
         token = token.join("")
 
-
-        if (!token) {
-            return res.status(400).send({ status: false, msg: "token is not present" })
-        }
-
-
+      
         let decodedToken = jwt.verify(token, "ourFifthProject", function (err, decodedToken) {
             if (err) {
                 return res.status(401).send({ status: false, msg: "you are not authenticate" })
             }
+            
             let time = Date.now()
             let exp = decodedToken.exp
             if (time > exp) {
@@ -64,9 +64,3 @@ exports.authorization = async function (req, res, next) {
     }
 
 }
-
-
-
-
-
-
