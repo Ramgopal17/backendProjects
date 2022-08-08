@@ -60,7 +60,7 @@ exports.createUser = async function (req, res) {
   
       }
       if(profileImage.length == 0){
-        return res.status(400).send({status:false, msg:"please provide profileImage"})
+        return res.status(400).send({status:false, message:"please provide profileImage"})
       }
   
       if (!isValid(phone)) {
@@ -88,7 +88,7 @@ exports.createUser = async function (req, res) {
         var j = JSON.parse(address)
       }
       catch (error) {
-        return res.status(400).send({ msg: "please enter user address correctly" })
+        return res.status(400).send({ message: "please enter user address correctly" })
       }
       data.address = j
   
@@ -144,7 +144,7 @@ exports.createUser = async function (req, res) {
     }
   
     catch (error) {
-      res.status(500).send({ msg: error.message })
+      res.status(500).send({ message: error.message })
     }
   
   }
@@ -198,7 +198,7 @@ exports.loginuser = async function (req, res) {
          
         })
 
-        res.status(200).send({ status: true, msg: "User login successfull", data: { userId: userId, token: token } })
+        res.status(200).send({ status: true, message: "User login successfull", data: { userId: userId, token: token } })
     }
 }
 
@@ -207,19 +207,14 @@ exports.getUser = async (req, res) => {
   try {
     let userId = req.params.userId
 
-  
-    
     if (!isValidObjectId(userId)) {
-      return res.status(400).send({ status: false, msg: "userid  is not valid" })
-
+      return res.status(400).send({ status: false, message: "userid  is not valid" })
     }
 
     let findUser = await userModel.findById(userId)
     if (!findUser) {
       return res.status(400).send({ status: false, message: "please enter correct user id" })
-
     }
-
 
     return res.status(200).send({ status: true, message: "User profile details", data: findUser })
   }
@@ -233,7 +228,7 @@ exports.updateUser = async (req, res) => {
   try {
     let userId = req.params.userId
     if (!isValidObjectId(userId)) {
-      return res.status(400).send({ status: false, msg: "userid  is not valid" })
+      return res.status(400).send({ status: false, message: "userid  is not valid" })
     }
 
     
@@ -347,7 +342,6 @@ exports.updateUser = async (req, res) => {
       let uniquePhone = await userModel.findOne({ phone: phone })
       if (uniquePhone) {
         return res.status(400).send({ status: false, message: "phone already exist " })
-
       }
     }
     
@@ -363,11 +357,11 @@ exports.updateUser = async (req, res) => {
 
     let findUser1 = await userModel.findOne({ _id: userId })
 
-  return  res.status(200).send({ status: true, "message": "User profile updated", data: findUser1 })
+  return  res.status(200).send({ status: true, message: "User profile updated", data: findUser1 })
     
   }
   catch (error) {
-  return  res.send({ msg: error.message })
+  return  res.send({ message: error.message })
   }
 
 }
