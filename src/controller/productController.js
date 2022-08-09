@@ -13,7 +13,9 @@ exports.createProduct = async function (req, res) {
         let productData = req.body
         let image = req.files
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, productImage, style, availableSizes, installments } = productData
-
+         if(Object.keys(productData).length==0){
+            return res.status(400).send({ status: false, message: "please  provide product details" })
+         }
 
 
         if (!isValid(title)) {
@@ -144,17 +146,15 @@ exports.getProducts = async (req, res) => {
 
         }
 
-        if (name != undefined || name != null) {
-            if (!validName(name)) {
-                return res.status(400).send({ status: false, message: "name should only contain alphabets" })
-            }
-            // if (!/^[A-Za-z]+[0-9][-_]+$/.test(name)) {
-            //     return res.status(400).send({ status: false, message: "name should only contain alphabets" })
-            // }
+        if(name){
+            if (!isValid(name)) return res.status(400).send({ status: false, message: "name is in incorrect format" })
+            temp["title"] = {"$regex": name};
+        }
+    
 
             temp = { title: name, ...temp }
 
-        }
+        
 
 
         if (priceLessThan) {
@@ -196,6 +196,7 @@ exports.getProducts = async (req, res) => {
 
 //=====================================================getProduct By Id=======================================================
 exports.getByProductId = async function (req, res) {
+    try{
     let productId = req.params.productId
 
     if (!isValidObjectId(productId)) {
@@ -207,7 +208,9 @@ exports.getByProductId = async function (req, res) {
         return res.status(400).send({ status: true, message: "product not found or already deleted" })
     }
     return res.status(200).send({ status: true, message: "Success", data: getProduct })
-
+    } catch(err){
+        return res.status(500).send({ status: false, message: error.message })
+    }
 }
 
 
@@ -348,6 +351,7 @@ exports.updateProduct = async function (req, res) {
 //=====================================================delete product=======================================================
 
 exports.deleteProduct = async function (req, res) {
+    try{
     let productId = req.params.productId
 
     if (!isValidObjectId(productId)) {
@@ -359,5 +363,7 @@ exports.deleteProduct = async function (req, res) {
         return res.status(404).send({ status: false, message: "product details not found or already deleted" })
     }
     return res.status(200).send({ status: true, message: "Success" })
-
+    }catch(err){
+        return res.status(500).send({ status: false, message: error.message })
+    }
 }

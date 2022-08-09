@@ -30,11 +30,9 @@ exports.createCart = async function (req, res) {
         const product = await productModel.findOne({ _id: productId, isDeleted: false })
         if (!product) return res.status(404).send({ status: false, message: "product not found or may be deleted..." })
         const productPrice = product.price
-        if (cartId) {
-           
-        }
+        
         const cart = await cartModel.findOne({ userId: userId })
-console.log(cart)
+
 
 
         if (cart) {
@@ -152,7 +150,6 @@ exports.updateCart = async function (req, res) {
         }
     }
 }
-
 
 exports.getCartById = async function (req, res) {
     const userId = req.params.userId
