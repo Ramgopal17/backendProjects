@@ -1,5 +1,5 @@
 function findPies(levelOfSweetness, desiredSweet) {
-    const arr= []
+    let arr= []
     let cs = 0
     for (let i = 0; i < levelOfSweetness.length; i++) {
 
