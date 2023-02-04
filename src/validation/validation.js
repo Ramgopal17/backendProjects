@@ -22,6 +22,10 @@ exports.validateEmail = (email) => {
             /^[a-zA-Z _\.\-0-9]+[@][a-z]{3,6}[.][a-z]{2,4}$/
 );
 }
+exports.passwordValidate = function (value) {
+    let regex = /^(?=.*[0-9 ])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
+    return regex.test(value)
+}
 exports.validCityAndstate = function (value) {
     let cityAndStateRegex=/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
         return cityAndStateRegex.test(value)
@@ -39,6 +43,18 @@ exports.validInstaLink=function (value){
 exports.validYoutubeLink=function (value){
     let youtubeLinkRegex=/http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
     return youtubeLinkRegex.test(value)
+}
+exports.validPinCode=function(value){
+    let regexPostal=/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/;
+    return regexPostal.test(value)
+}
+exports.digitValidation=function(value){
+    let regex=/^[0-9]*$/
+    return regex.test(value)
+}
+exports.dateValidation=function(value){
+    let dateRegex=/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/
+    return dateRegex.test(value)
 }
    
    

@@ -11,7 +11,7 @@ const Mov=db.mov
 const Gallery=db.gallery
 const PaymentInfo=db.paymentInfo
 const Faq=db.faq
-const {isValid,validateEmail,validMobNum,validName,validFacebookLink,validInstaLink,validYoutubeLink}=require("../validation/validation")
+const {isValid,validateEmail,validMobNum,validName,validFacebookLink,validInstaLink,validYoutubeLink,validCityAndstate,validPinCode,digitValidation,dateValidation}=require("../validation/validation")
 
 exports.createBuisnessProfile=async function (req,res){
     try{
@@ -88,9 +88,30 @@ if (!validYoutubeLink(youtubeLink)){
     }
     const buisness=await BuisnessDetail.create(buisnessData,{transaction})
 // ----------------------------- address related data-------------------
- let{address,city,state,landMark}=data
+ let{address,city,state,landMark,pinCode}=data
  if(!isValid(address)){
     res.status(400).send({status:false,msg:"please enter your address"})
+}
+if(!isValid(city)){
+    res.status(400).send({status:false,msg:"please enter your address"})
+}
+if(!validCityAndstate(city)){
+    res.status(400).send({status:false,msg:"please enter city in valid format"})
+}
+if(!isValid(state)){
+    res.status(400).send({status:false,msg:"please enter your address"})
+}
+if(!validCityAndstate(state)){
+    res.status(400).send({status:false,msg:"please enter state in valid format"})
+}
+if(!isValid(landMark)){
+    res.status(400).send({status:false,msg:"please enter your address"})
+}
+if(!isValid(pinCode)){
+    res.status(400).send({status:false,msg:"please enter your address"})
+}
+if(!validPinCode.test(pinCode)){
+    res.status(400).send({status:false,msg:"please valid indian pin code"})
 }
 
 const addressData={
@@ -109,30 +130,55 @@ const kycData ={
     "gstRegistration":req.body.gstRegistration
 }
 const aadharCard=req.files
+if(!isValid(aadharCard)){
+    res.status(400).send({status:false,msg:"please upload your aadhar card"})
+}
   
    b=await uploadFile(aadharCard[0])
    kycData.aadharCard=b
 
    const panCard=req.files
-   console.log(1223);
+   if(!isValid(panCard)){
+    res.status(400).send({status:false,msg:"please upload your panCard"})
+}
+ 
    c=await uploadFile(panCard[0])
    kycData.panCard=c
 const kyc=await KycDetail.create(kycData,{transaction})
 // --------------------  buisness info related data-----------------
 
+let {NameOfbuisness,buisnessDescription,buisnessCategory}=data
+if(!isValid(NameOfbuisness)){
+    res.status(400).send({status:false,msg:"please enter buisness name"})
+}
+
+if(!isValid(buisnessCategory)){
+    res.status(400).send({status:false,msg:"please enter buisness category"})
+}
+if(['Machinery and equipment', 'wheels and trucks', 'Services'].includes(buisnessCategory)){
+    res.status(400).send({status:false,msg:"please choose one of the given option"})
+}
+
 const buisnessInfoData={
-    "NameOfbuisness":req.body.NameOfbuisness,
-    "buisnessDescription":req.body.buisnessDescription,
-    "buisnessCategory":req.body.buisnessCategory
+    "NameOfbuisness":NameOfbuisness,
+    "buisnessDescription":buisnessDescription,
+    "buisnessCategory":buisnessCategory
 }
 
 let buisnessdata=await BuisnessInfo.create(buisnessInfoData,{transaction})
 
 //------------------------------ product and service related data
+let {NameOfProduct,price,description}=data
+if(!isValid(NameOfProduct)){
+    res.status(400).send({status:false,msg:"please enter product name"})
+}
+if(!isValid(price)){
+    res.status(400).send({status:false,msg:"please enter price "})
+}
 const productServiceData={
-    "NameOfProduct":req.body.NameOfProduct,
-    "price":req.body.price,
-    "description":req.body.description,
+    "NameOfProduct":NameOfProduct,
+    "price":price,
+    "description":description,
 }
 const uploadImage=req.files
   
@@ -141,9 +187,24 @@ const uploadImage=req.files
 const productService=await ProductService.create(productServiceData,{transaction})
 
 // // ---------------------mov related data----------------------------
+let {minOrderVal,estimatedDelivery}=data
+if(!isValid(minOrderVal)){
+    res.status(400).send({status:false,msg:"please enter min Order Value "})
+}
+if(digitValidation.test(minOrderVal)){
+    res.status(400).send({status:false,msg:"only digit allowed"})
+}
+if(!isValid(estimatedDelivery)){
+    res.status(400).send({status:false,msg:"please enter estimated delivery data "})
+}
+if(!dateValidation(estimatedDelivery)){
+    res.status(400).send({status:false,msg:"please enter date in dd-mm-yyyy format"})
+}
+
+
 const movData={
-    "mov":req.body.mov,
-    "estimatedDelivery":req.body.estimatedDelivery
+    "minOrderVal":minOrderVal,
+    "estimatedDelivery":estimatedDelivery
 }
 
 const mov=await Mov.create(movData,{transaction})
@@ -158,9 +219,21 @@ let gallery=await Gallery.create(galleryData,{transaction})
 
 
 // ------------------------payment info data--------------------
+let {paymentOptions,paymentTerms}=data
+if(!isValid(paymentOptions)){
+    res.status(400).send({status:false,msg:"please choose payment options"})
+}
+if(['select all','cash','Net banking','cheque/DD','UPI',"NetBanking"].includes(paymentOptions)){
+    res.status(400).send({status:false,msg:"please choose one of the given in cheque box"})
+}
+
+if(!isValid(paymentTerms)){
+    res.status(400).send({status:false,msg:"please mention the term of payment (Advance payment,part payment,customized payment)"})
+}
+
 const paymentInfo={
-    "paymentOptions":req.body.paymentOptions,
-    "paymentTerms":req.body.paymentTerms
+    "paymentOptions":paymentOptions,
+    "paymentTerms":paymentTerms
 }
 
 const payment=await PaymentInfo.create(paymentInfo,{transaction})
@@ -170,7 +243,7 @@ const payment=await PaymentInfo.create(paymentInfo,{transaction})
     "question":req.body.question
   }
   const faq=await Faq.create(faqData,{transaction})
-await transaction.commit()
+        await transaction.commit()
 
    res.status(200).send({status:false,msg:"successfully created",data:personal,buisness,addressCreated,kyc,buisnessdata,productService,mov,gallery,payment,faq})
 } catch (error) { 

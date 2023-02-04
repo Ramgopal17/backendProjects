@@ -6,16 +6,14 @@ module.exports=(sequelize,DataTypes)=>{
           
           },
           buisnessDescription: {
-            type: DataTypes.STRING,
-            allowNull: false,
+            type: DataTypes.STRING
+           
           
           },
         buisnessCategory: {
                 type:DataTypes.ENUM,
                 values: ['Machinery and equipment', 'wheels and trucks', 'Services']
-              },
-       
-          
+              }
        });
        BuisnessInfo.removeAttribute('id');
       return BuisnessInfo

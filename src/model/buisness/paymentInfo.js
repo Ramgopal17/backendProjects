@@ -8,6 +8,7 @@ module.exports=(sequelize,DataTypes)=>{
           paymentTerms: {
             type: DataTypes.STRING,
             allowNull: false,
+            values: ['select all','cash','Net banking','cheque/DD','UPI',"NetBanking"]
           
           },
        

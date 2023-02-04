@@ -1,5 +1,6 @@
 const db=require("../model")
 const jwt = require('jsonwebtoken')
+const {validateEmail,passwordValidate}=require("../validation/validation")
 
 const SignUp=db.signUp
 const isValid = function (value) {   
@@ -7,8 +8,7 @@ const isValid = function (value) {
     if (typeof value === "string" && value.trim().length === 0) return false;
     return true;
 }
-let emailRegex=/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
-let passRegex=/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+
 exports.createSignUp=async function (req,res){
     try{
 
@@ -17,7 +17,7 @@ exports.createSignUp=async function (req,res){
     if(!isValid(email)){
         res.status(400).send({status:false,msg:"please enter  your email"})
 }
-if(!emailRegex.test(email)){
+if(!validateEmail(email)){
     res.status(400).send({status:false,msg:"please enter email in correct format"})
 }
 let emailAlreadyExist=await SignUp.findOne({
@@ -34,8 +34,8 @@ if(!isValid(userName)){
 if(!isValid(password)){
     res.status(400).send({status:false,msg:"please enter password"})
 }
-console.log(passRegex.test(password));
-if(!passRegex.test(password)){
+
+if(!passwordValidate(password)){
     res.status(400).send({status:false,msg:"please enter password having Minimum eight characters, at least one letter and one number:"})
 }
 if(!isValid(repeatPassword)){
@@ -55,6 +55,7 @@ res.status(500).send({status:false,msg:err.message});
 
 
 exports.loginuser = async function (req, res) {
+  try{
 
     let data = req.body
     if (Object.keys(data).length == 0) {
@@ -67,7 +68,7 @@ exports.loginuser = async function (req, res) {
   
     }
   
-    if (!emailRegex.test(email)) {
+    if (!validateEmail(email)) {
       return res.status(400).send({ status: false, message: "please enter email in  correct format" })
   
     }
@@ -100,6 +101,8 @@ exports.loginuser = async function (req, res) {
   
           res.status(200).send({ status: true, message: "User login successfull", data: { userId: userId, token: token } })
       
-  }
-  
+  }catch (error) { 
+    return res.status(500).send({ status: false, message: error.message })
+    }
+}
   

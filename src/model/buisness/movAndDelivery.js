@@ -1,6 +1,6 @@
 module.exports=(sequelize,DataTypes)=>{
     const Mov = sequelize.define("mov", {
-        mov: {
+        minOrderVal: {
             type: DataTypes.STRING,
             allowNull: false,
           

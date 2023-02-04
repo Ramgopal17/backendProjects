@@ -83,15 +83,8 @@ b = await uploadFile(panCard[0])
 kycInfo.panCard=b
 
 let kyc= await KycData.create(kycInfo,{transaction})
-
-
-        await transaction.commit()
-
-        res.status(200).send({status:false,msg:"successfully created",data:personDetails,profession,kyc})
-
-
-
-    
+await transaction.commit()
+res.status(200).send({status:false,msg:"successfully created",data:personDetails,profession,kyc})
 } catch (error) { 
 return res.status(500).send({ status: false, message: error.message })
 }

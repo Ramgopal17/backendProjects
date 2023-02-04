@@ -11,11 +11,11 @@ module.exports=(sequelize,DataTypes)=>{
         },
         description:{
             type: DataTypes.STRING,
-            allowNull: false,
+           
         },
         uploadImage:{
             type: DataTypes.STRING,
-            allowNull: false,
+            
         },
        });
        ProductService.removeAttribute('id');
