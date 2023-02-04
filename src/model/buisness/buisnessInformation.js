@@ -14,7 +14,7 @@ module.exports=(sequelize,DataTypes)=>{
                 type:DataTypes.ENUM,
                 values: ['Machinery and equipment', 'wheels and trucks', 'Services']
               }
-       });
+       }, { timestamps: false });
        BuisnessInfo.removeAttribute('id');
       return BuisnessInfo
     }

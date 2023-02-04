@@ -17,7 +17,7 @@ module.exports=(sequelize,DataTypes)=>{
           }
         
           
-       });
+       }, { timestamps: false });
        KycDetail.removeAttribute('id');
       return KycDetail
     }

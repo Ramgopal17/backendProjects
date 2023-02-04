@@ -14,7 +14,7 @@ module.exports=(sequelize,DataTypes)=>{
        
        
           
-       });
+       }, { timestamps: false });
        PaymentInfo.removeAttribute('id');
       return PaymentInfo
     }

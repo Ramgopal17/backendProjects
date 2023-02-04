@@ -24,7 +24,7 @@ module.exports=(sequelize,DataTypes)=>{
             allowNull: false,
           }
           
-       });
+       }, { timestamps: false });
        AddressDetail.removeAttribute('id');
       return AddressDetail
     }

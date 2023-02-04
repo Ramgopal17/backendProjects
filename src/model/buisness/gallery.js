@@ -8,7 +8,7 @@ module.exports=(sequelize,DataTypes)=>{
        
        
           
-       });
+       }, { timestamps: false });
        Gallery.removeAttribute('id');
       return Gallery
     }

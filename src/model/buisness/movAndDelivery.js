@@ -12,7 +12,7 @@ module.exports=(sequelize,DataTypes)=>{
         },
         
           
-       });
+       }, { timestamps: false });
        Mov.removeAttribute('id');
       return Mov
     }

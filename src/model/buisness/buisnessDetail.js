@@ -32,7 +32,7 @@ module.exports=(sequelize,DataTypes)=>{
             
           },
           
-       });
+       }, { timestamps: false });
        BuisnessDetail.removeAttribute('id');
       return BuisnessDetail
     }
