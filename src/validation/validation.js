@@ -26,11 +26,18 @@ exports.passwordValidate = function (value) {
     let regex = /^(?=.*[0-9 ])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])([a-zA-Z0-9!@#$%^&*]{8,15})$/
     return regex.test(value)
 }
-exports.validCityAndstate = function (value) {
-    let cityAndStateRegex=/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
-        return cityAndStateRegex.test(value)
+exports.validCity = function (value) {
+    let cityRegex=/^[a-zA-Z\u0080-\u024F\s\/\-\)\(\`\.\"\']+$/
+
+        return cityRegex.test(value)
 }
-  
+
+
+exports.validState = function (value) {
+    let stateRegex=/[A-Z][a-z]+(?: +[A-Z][a-z]+)*/
+
+        return stateRegex.test(value)
+}
 exports.validFacebookLink=function (value){
     let facebookRegex=/(?:(?:http|https):\/\/)?(?:www.|m.)?facebook.com\/(?!home.php)(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\.-]+)/
     return facebookRegex.test(value)
@@ -45,7 +52,7 @@ exports.validYoutubeLink=function (value){
     return youtubeLinkRegex.test(value)
 }
 exports.validPinCode=function(value){
-    let regexPostal=/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/;
+    let regexPostal=/^[1-9][0-9]{5}$/
     return regexPostal.test(value)
 }
 exports.digitValidation=function(value){

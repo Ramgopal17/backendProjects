@@ -11,7 +11,7 @@ const Mov=db.mov
 const Gallery=db.gallery
 const PaymentInfo=db.paymentInfo
 const Faq=db.faq
-const {isValid,validateEmail,validMobNum,validName,validFacebookLink,validInstaLink,validYoutubeLink,validCityAndstate,validPinCode,digitValidation,dateValidation}=require("../validation/validation")
+const {isValid,validateEmail,validMobNum,validName,validFacebookLink,validInstaLink,validYoutubeLink,validCity,validState,validPinCode,digitValidation,dateValidation}=require("../validation/validation")
 
 exports.createBuisnessProfile=async function (req,res){
     try{
@@ -67,7 +67,7 @@ let personalData={
 if(!isValid(buisnessWebsite)){
     res.status(400).send({status:false,msg:"please enter buisness website "})
 }
-if (!validFacebookLink(youtubeLink)){
+if (!validFacebookLink(facebookLink)){
     res.status(400).send({status:false,msg:"please enter valid facebook  link"})
 }
 if(!validInstaLink(instagramLink)){
@@ -93,25 +93,29 @@ if (!validYoutubeLink(youtubeLink)){
     res.status(400).send({status:false,msg:"please enter your address"})
 }
 if(!isValid(city)){
-    res.status(400).send({status:false,msg:"please enter your address"})
+    res.status(400).send({status:false,msg:"please enter your city name"})
 }
-if(!validCityAndstate(city)){
+if(!validCity(city)){
     res.status(400).send({status:false,msg:"please enter city in valid format"})
 }
 if(!isValid(state)){
     res.status(400).send({status:false,msg:"please enter your address"})
 }
-if(!validCityAndstate(state)){
+if(!validState(state)){
     res.status(400).send({status:false,msg:"please enter state in valid format"})
 }
+
 if(!isValid(landMark)){
     res.status(400).send({status:false,msg:"please enter your address"})
 }
 if(!isValid(pinCode)){
     res.status(400).send({status:false,msg:"please enter your address"})
 }
-if(!validPinCode.test(pinCode)){
-    res.status(400).send({status:false,msg:"please valid indian pin code"})
+let regexPostal=/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/;
+
+console.log(regexPostal.test(pinCode))
+if(!validPinCode(pinCode)){
+    res.status(400).send({status:false,msg:"please enter valid indian pin code"})
 }
 
 const addressData={
@@ -155,7 +159,7 @@ if(!isValid(NameOfbuisness)){
 if(!isValid(buisnessCategory)){
     res.status(400).send({status:false,msg:"please enter buisness category"})
 }
-if(['Machinery and equipment', 'wheels and trucks', 'Services'].includes(buisnessCategory)){
+if(!['Machinery and equipment', 'wheels and trucks', 'Services'].includes(buisnessCategory)){
     res.status(400).send({status:false,msg:"please choose one of the given option"})
 }
 
@@ -191,7 +195,7 @@ let {minOrderVal,estimatedDelivery}=data
 if(!isValid(minOrderVal)){
     res.status(400).send({status:false,msg:"please enter min Order Value "})
 }
-if(digitValidation.test(minOrderVal)){
+if(!digitValidation(minOrderVal)){
     res.status(400).send({status:false,msg:"only digit allowed"})
 }
 if(!isValid(estimatedDelivery)){
@@ -223,7 +227,7 @@ let {paymentOptions,paymentTerms}=data
 if(!isValid(paymentOptions)){
     res.status(400).send({status:false,msg:"please choose payment options"})
 }
-if(['select all','cash','Net banking','cheque/DD','UPI',"NetBanking"].includes(paymentOptions)){
+if(!['select all','cash','Net banking','cheque/DD','UPI',"NetBanking"].includes(paymentOptions)){
     res.status(400).send({status:false,msg:"please choose one of the given in cheque box"})
 }
 
