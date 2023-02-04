@@ -1,5 +1,5 @@
 module.exports=(sequelize,DataTypes)=>{
-    const Address = sequelize.define("address", {
+    const BranchAddress = sequelize.define("branchAddress", {
 
         street: {
           type: DataTypes.STRING,
@@ -12,10 +12,14 @@ module.exports=(sequelize,DataTypes)=>{
         state: {
             type: DataTypes.STRING,
             allowNull: false,
+          },
+          postalCode:{
+            type:DataTypes.INTEGER,
+            allowNull: false,
           }
         });
-        Address.removeAttribute('id')
-      return Address 
+        BranchAddress.removeAttribute('id')
+      return BranchAddress 
     }
   
   

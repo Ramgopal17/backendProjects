@@ -1,6 +1,7 @@
 const db=require("../model")
-
+const { sequelize } = require("../model")
 const User=db.user
+const Address=db.address
 const isValid = function (value) {   
     if (typeof value === "undefined" || value === null) return false;
     if (typeof value === "string" && value.trim().length === 0) return false;
@@ -8,19 +9,28 @@ const isValid = function (value) {
 }
 let emailRegex=/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
 let mobileRegex=/^[7-9][0-9]{9}$/
+let cityAndStateRegex=/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
+let nameRegex=/^[A-Za-z][a-z]*(([,.] |[ '-])[A-Za-z][a-z]*)*(\.?)( [IVXLCDM]+)?$/
+
 
 exports.createSignIn=async function (req,res){
+  try{
+        let data=req.body
 
-
-    let data=req.body
-  let  {firstName,lastName,email,phone,address}=data
+  let  {firstName,lastName,email,phone}=data
  if(!isValid(firstName)){
     return res.status(400).send({status:false,msg:"please enter your firstName"})
-
+}
+if(!nameRegex.test(firstName)){
+  res.status(400).send({status:false,msg:" first name should contain only alphabetical letter"})
  }
+
  if(!isValid(lastName)){
     return res.status(400).send({status:false,msg:"please enter your lastName"})
 
+ }
+ if(!nameRegex.test(lastName)){
+  res.status(400).send({status:false,msg:"last name should contain only alphabetical letter"})
  }
 
  if(!isValid(email)){
@@ -36,42 +46,60 @@ if(!isValid(phone)){
 if(!mobileRegex.test(phone)){
     return res.status(400).send({status:false,msg:"please enter your indian mobile no"}) 
 }
-if (!isValid(address)) {
-    return res.status(400).send({ status: false, message: "please enter address" })
-  }
 
-  try {
+const transaction=await sequelize.transaction();
 
-var j = JSON.parse(JSON.stringify(address))
-
-
-
-  }
-  catch (error) {
-    return res.status(400).send({ message: "please enter address correctly" })
-  }
-var j = JSON.parse(JSON.stringify(address))
-
-  data.address = j
-
-
-if (!isValid(j.street)) {
-    return res.status(400).send({ status: false, message: "please enter  street in  branch address" })
-  }
-
-
-  if (!isValid(j.city)) {
-    return res.status(400).send({ status: false, message: "please enter  city in  branch address" })
-  }
-  if (!isValid(j.state)) {
-    return res.status(400).send({ status: false, message: "please enter  city in  branch address" })
-  }
-  console.log(data);
-
-
-    let dataCreated= await User.create(data)
-    return res.status(200).send({status:true,msg:"succesfully created",data:dataCreated})
+let userCreated=await User.create(data,{transaction})
+// ---------------- user address data-------------------
+let {street,city,state}=data
+if(!isValid(street)){
+  return res.status(400).send({status:false,msg:"please enter street name"})
 }
+
+if(!isValid(city)){
+  return res.status(400).send({status:false,msg:"please enter city name"})
+}
+if(!cityAndStateRegex.test(city)){
+  res.status(400).send({status:false,msg:"please enter city name in valid format"})
+ }
+if(!isValid(state)){
+  return res.status(400).send({status:false,msg:"please enter state name"})
+}
+if(!cityAndStateRegex.test(state)){
+  res.status(400).send({status:false,msg:"please enter state name in valid format"})
+ }
+
+const addressData={
+  "street":street,
+  "city":city,
+  "state":state,
+  }
+const address= await Address.create(addressData,{transaction})
+ await transaction.commit()
+res.status(200).send({status:true,msg:"successfully created",data:userCreated,address})
+}catch(err){
+res.status(500).send({ status: false, msg: err.message });
+  
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 exports.getUser= async function (req,res){
   let fetchedData= await User.findAll()

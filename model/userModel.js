@@ -20,11 +20,7 @@ module.exports=(sequelize,DataTypes)=>{
             allowNull: false,
           },
        
-          address:{
-            type: DataTypes.JSON,
-            allowNull: false,
-               
-           }
+          
       });
       return User
     }

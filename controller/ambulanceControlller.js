@@ -11,6 +11,9 @@ exports.createAmbulance=async function (req,res){
     try{
     let data=req.body
     const {vehicleType,info}=data
+    if(Object.keys(data).length==0){
+        return res.status(400).send({status:true,msg:"please enter the data "})
+    }
     if(!isValid(vehicleType)){
         res.status(400).send({status:false,msg:"please enter vehicleType"})
     }

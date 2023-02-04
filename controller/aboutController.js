@@ -11,23 +11,26 @@ exports.createAbout=async function (req,res){
     try{
 
     let data=req.body
+    if(Object.keys(data).length==0){
+        return res.status(400).send({status:true,msg:"please enter the data "})
+    }
     let {info}=data
     if(!isValid(info)){
         res.status(400).send({status:false,msg:"please enter information related to delever"})
-}
+    }
 
     let dataCreated= await About.create(data)
      return res.status(200).send({status:true,msg:"succesfully created",data:dataCreated})
 
 }catch(err){
-
-    res.status(500).send({status:false,msg:err.message});
+res.status(500).send({status:false,msg:err.message});
 }
 }
 
 exports.getAbout=async function (req,res){
     try{
     let data=req.query
+   
     let fetchedData= await About.findAll(data)
     return res.status(200).send({status:true,msg:"succesfully created",data:fetchedData})
 

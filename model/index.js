@@ -41,8 +41,15 @@ db.user=require("./userModel.js")(sequelize,DataTypes)
 db.vehicle=require("./vehicleModel")(sequelize,DataTypes)
 db.bank=require("./bankModel")(sequelize,DataTypes)
 db.address=require("./addressModel")(sequelize,DataTypes)
-db.address.belongsTo(db.bank);
-db.bank.hasOne(db.address);
+db.branchAddress=require("./branchAddressModel")(sequelize,DataTypes)
+// db.address.belongsTo(db.user)
+// db.user.hasOne(db.address)
+
+
+
+
+
+
 
 
 db.sequelize.sync({ force: false })

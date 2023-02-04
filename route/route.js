@@ -6,7 +6,7 @@ const {createContact}=require("../controller/contactUsController")
 const {createSignIn,getUser,updateUser,deleteUser}=require("../controller/userController")
 const {addBankInfo}=require("../controller/bankController")
 const {createVehicleInfo}=require("../controller/vehicleController")
-const {createAddress}=require("../controller/addressController")
+
 
 const {bookAmbulance}=require("../controller/bookingController")
 // --------------------about page related api---------------------
@@ -16,7 +16,6 @@ router.get("/get/about",getAbout)
 router.put("/updateAbout/:id",updateAbout)  
 router.delete("/delete/about/:id",deleteAbout)
 
-router.post("/post/address",createAddress)
 
 //------------------------ambulance page api-----------------------
 router.post("/post/ambulance",createAmbulance)
@@ -44,4 +43,6 @@ router.post("/post/booking",bookAmbulance)
 router.post("/post/bankInfo",addBankInfo)
 //------------------------- vehicle related api---------------------
 router.post("/post/vehicle",createVehicleInfo)
+
+
 module.exports=router
