@@ -2,6 +2,7 @@ const db=require("../model")
 const { sequelize } = require("../model")
 const User=db.user
 const Address=db.address
+const {validateEmail,validMobNum,validName,validCity,validState}=require("../validation/validation")
 const isValid = function (value) {   
     if (typeof value === "undefined" || value === null) return false;
     if (typeof value === "string" && value.trim().length === 0) return false;
@@ -21,7 +22,7 @@ exports.createSignIn=async function (req,res){
  if(!isValid(firstName)){
     return res.status(400).send({status:false,msg:"please enter your firstName"})
 }
-if(!nameRegex.test(firstName)){
+if(!validName(firstName)){
   res.status(400).send({status:false,msg:" first name should contain only alphabetical letter"})
  }
 
@@ -29,7 +30,7 @@ if(!nameRegex.test(firstName)){
     return res.status(400).send({status:false,msg:"please enter your lastName"})
 
  }
- if(!nameRegex.test(lastName)){
+ if(!validName(lastName)){
   res.status(400).send({status:false,msg:"last name should contain only alphabetical letter"})
  }
 
@@ -37,13 +38,13 @@ if(!nameRegex.test(firstName)){
     return res.status(400).send({status:false,msg:"please enter your email"})
 
  }
- if(!emailRegex.test(email)){
+ if(!validateEmail(email)){
     return res.status(400).send({status:false,msg:"please enter email in valid abc@gmail.com"})
  }
 if(!isValid(phone)){
     return res.status(400).send({status:false,msg:"please enter your mobile no"})
 }
-if(!mobileRegex.test(phone)){
+if(!validMobNum(phone)){
     return res.status(400).send({status:false,msg:"please enter your indian mobile no"}) 
 }
 
@@ -59,13 +60,13 @@ if(!isValid(street)){
 if(!isValid(city)){
   return res.status(400).send({status:false,msg:"please enter city name"})
 }
-if(!cityAndStateRegex.test(city)){
+if(!validCity(city)){
   res.status(400).send({status:false,msg:"please enter city name in valid format"})
  }
 if(!isValid(state)){
   return res.status(400).send({status:false,msg:"please enter state name"})
 }
-if(!cityAndStateRegex.test(state)){
+if(!validState(state)){
   res.status(400).send({status:false,msg:"please enter state name in valid format"})
  }
 

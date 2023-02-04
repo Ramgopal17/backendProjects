@@ -1,5 +1,5 @@
 const db=require("../model")
-
+const {validateEmail,validName}=require("../validation/validation")
 const Contact=db.contact
 const isValid = function (value) {   
     if (typeof value === "undefined" || value === null) return false;
@@ -7,8 +7,6 @@ const isValid = function (value) {
     return true;
 }
 
-let emailRegex=/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
-let fullNameRegex = /^[a-zA-Z][a-zA-Z\\s]+$/;
 
 exports.createContact=async function (req,res){
     try{
@@ -18,13 +16,13 @@ exports.createContact=async function (req,res){
     if(!isValid(fullName)){
         return res.status(400).send({status:true,msg:"please enter your fullName"})
     }
-   if(!fullNameRegex.test(fullName)){
+   if(!validName(fullName)){
     return res.status(400).send({status:true,msg:"please enter your fullName in correct format"})
 }
     if(!isValid(email)){
         return res.status(400).send({status:true,msg:"please enter your email"})
     }
-    if(!emailRegex.test(email)){
+    if(!validateEmail(email)){
         return res.status(400).send({status:true,msg:"please enter email in abc@gmail.com format"})
     }
     if(!isValid(message)){

@@ -1,18 +1,8 @@
 const db=require("../model")
 const { sequelize } = require("../model")
+const {isValid,validName,validCity,validState,validPinCode}=require("../validation/validation")
 const Bank=db.bank
 const BranchAddress=db.branchAddress
-let regexPostal=/^[1-9]{1}[0-9]{2}\\s{0, 1}[0-9]{3}$/;
-let cityAndStateRegex=/([A-Za-z]+(?: [A-Za-z]+)*),? ([A-Za-z]{2})/
-let nameRegex=/^[A-Za-z][a-z]*(([,.] |[ '-])[A-Za-z][a-z]*)*(\.?)( [IVXLCDM]+)?$/
-
-
-const isValid = function (value) {   //function to check entered data is valid or not
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length === 0) return false;
-    return true;
-}
-
 exports.addBankInfo=async function (req,res){
     try{
 
@@ -31,12 +21,12 @@ exports.addBankInfo=async function (req,res){
        if(!isValid(firstName)){
         res.status(400).send({status:false,msg:"please enter first name"})
        }
-       if(!nameRegex.test(firstName)){
+       if(!validName(firstName)){
         res.status(400).send({status:false,msg:" first name should contain only alphabetical letter"})
        }
        if(!isValid(lastName)){
         res.status(400).send({status:false,msg:"please enter last name"})
-        if(!nameRegex.test(lastName)){
+        if(!validName(lastName)){
             res.status(400).send({status:false,msg:" lastName should contain only alphabetical letter"})
            }
     }
@@ -51,19 +41,19 @@ if(!isValid(street)){
    if(!isValid(city)){
     res.status(400).send({status:false,msg:"please enter street name"})
    }
-   if(!cityAndStateRegex.test(city)){
+   if(!validCity(city)){
     res.status(400).send({status:false,msg:"please enter city name in valid format"})
    }
    if(!isValid(state)){
     res.status(400).send({status:false,msg:"please enter street name"})
    }
-   if(!cityAndStateRegex.test(state)){
+   if(!validState(state)){
     res.status(400).send({status:false,msg:"please enter state name in valid format"})
    }
    if(!isValid(postalCode)){
     res.status(400).send({status:false,msg:"please enter street name"})
    }
-   if(!regexPostal.test(postalCode)){
+   if(!validPinCode(postalCode)){
     res.status(400).send({status:false,msg:"please enter valid postal code"})
    }
 const branchAddressData={

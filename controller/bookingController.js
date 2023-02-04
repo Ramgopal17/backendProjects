@@ -1,5 +1,6 @@
 const db = require("../model")
 const Booking = db.booking
+const {validMobNum,validName}=require("../validation/validation")
 
 
 
@@ -18,7 +19,7 @@ exports.bookAmbulance = async function (req, res) {
     if (isValid(name)) {
       return res.status(400).send({ status: false, message: "please enter name in correct format" })
     }
-    if (!nameRegex.test(name)) {
+    if (!validName(name)) {
       return res.status(400).send({ status: false, message: "please enter start date" })
     }
 
@@ -36,13 +37,10 @@ exports.bookAmbulance = async function (req, res) {
       return res.status(400).send({ status: false, message: "please enter your mobile number" })
 
     }
-    if (!mobileRegex.test(phone)) {
+    if (!validMobNum(phone)) {
       return res.status(400).send({ status: false, message: "please enter indian mobile number" })
     }
-    if (!isValid(phone)) {
-      return res.status(400).send({ status: false, message: "please enter your mobile number" })
-
-    }
+   
     if (!isValid(scheduleTime)) {
       return res.status(400).send({ status: false, message: "please enter scheduled time" })
     }

@@ -1,5 +1,5 @@
 const db=require("../model")
-
+const {validDrivingLic}=require("../validation/validation")
 var Vehicle=db.vehicle
 
 const isValid = function (value) {   
@@ -7,9 +7,6 @@ const isValid = function (value) {
     if (typeof value === "string" && value.trim().length === 0) return false;
     return true;
 }
-
-const dlRegex = /^(([A-Z]{2}[0-9]{2})( )|([A-Z]{2}-[0-9]{2}))((19|20)[0-9][0-9])[0-9]{7}$/; 
-
 
 exports.createVehicleInfo=async function (req,res){
     try{
@@ -31,7 +28,7 @@ exports.createVehicleInfo=async function (req,res){
       if(!isValid(driverLicenceNumber)){
         res.status(400).send({status:false,msg:"please enter driving licence number"})
       }
-      if(!dlRegex.test(driverLicenceNumber)){
+      if(!validDrivingLic(driverLicenceNumber)){
         res.status(400).send({status:false,msg:"please enter  indian driving licence number format"})
       }
      if(!isValid(insurancePolicyNumber)){
