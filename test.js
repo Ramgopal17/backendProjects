@@ -22,17 +22,17 @@
 
 function eliminate(n){
 const res = [];
-for (let i = 1; i <= n; i++) {
+for (let i=1;i<=n;i++) {
   res.push(i);
 }
-for (let i = 0; res.length !== 1; i++) {
-  if (res.length < i + 1) {
-    i = 0;
+for (let i=0;res.length!==1;i++) {
+  if (res.length<i+1) {
+    i=0;
   }
-  if (res.length === i + 1) {
-    i = -1;
+  if (res.length===i+1) {
+    i=-1;
   }
-res.splice(i + 1, 1);
+res.splice(i+1,1);
 }
 
 return res[0]
