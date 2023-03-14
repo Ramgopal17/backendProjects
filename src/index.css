@@ -11,3 +11,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+form {
+  background-color: cyan;
+   border :5px solid black;
+   line-height: 25px;
+   margin:150px 250px 150px;
+   padding-left:350px;
+   /* padding-right:150px; */
+   padding-bottom:50px;
+   border-radius: 10px;
+   outline-style: solid;
+   outline-color: red;
+ 
+}
+button{
+ background-color: green;
+ border-radius: 5px;
+}
+
+
+
